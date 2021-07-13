@@ -3,7 +3,14 @@ const express=require('express'); //import express
 const app=express();
 const dataService=require('./Service/data.service')
 const session = require('express-session'); 
+const cors=require('cors')
 app.use(express.json())
+
+app.use(cors({
+    origin:'http://localhost:4200',
+    credentials:true
+}))
+
 app.use(session({                            //session
     secret:'randomsecurestring',
     resave:false,
@@ -51,7 +58,7 @@ app.post('/addevent',authMiddleware,(req,res)=>{
     })
 });
 
-app.post('/viewevent',authMiddleware,(req,res)=>{
+app.post('/viewevent',(req,res)=>{
     console.log(req.session.currentUser);
     dataService.viewEvent(req,req.body.uid)
     .then(result=>{

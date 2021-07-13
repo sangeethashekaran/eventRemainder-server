@@ -20,7 +20,7 @@ const register = (uname, uid, pswd) => {
           statusCode: 422,
           status: false,
           message: "User exist..Please login",
-          password: user.password
+          username: user.username
         }
       }
       else {
@@ -105,19 +105,12 @@ const addEvent = (req, uid, eDate, eName) => {
   return db.User.findOne({ uid })
     .then(user => {
       if (req.session.currentUser != uid) {
-        return {
-          statusCode: 422,
-          status: false,
-          message: "permission denied"
+          return {
+            statusCode: 422,
+            status: false,
+            message: "permission denied"
+          }
         }
-      // if (!user) {
-      //   return {
-      //     statusCode:422,
-      //     status:false,
-      //     message:"failed to add event"
-      //   }
-      // }
-      }
       if (user) {
         user.eventDetails.push({
           eDate: eDate,
@@ -130,41 +123,11 @@ const addEvent = (req, uid, eDate, eName) => {
           message: " Your Event has added successfully"
         }
       }
-    })
-  }
-      // if (req.session.currentUser != uid) {            //checking currnt user's id = uid
-      //   return {
-      //     statusCode: 422,
-      //     status: false,
-      //     message: "Permission denied"
-      //   }
-      // else{
-      //   return {
-      //     statusCode:422,
-      //     status:false,
-      //     message:"failed to add event"
-      //   }
+      
+      })
+    }
+      
 
- // if(user){
-// user.eventDetails.push({
-//   eDate:eDate,
-//   eName:eName
-// })
-// user.save();                  //saving to db
-// return{
-//   statusCode:200,
-//   status:true,
-//   message:" Your Event has added successfully"
-// }
-// }
-// else{
-//   return {
-//     statusCode:422,
-//     status:false,
-//     message:"failed to add event"
-//   }
-// }
-// 
 //     console.log(user);
 
 //     user[uID]["eventDetails"].push({
@@ -196,20 +159,30 @@ const viewEvent = (req, uid) => {
   console.log(req.session.currentUser);
   return db.User.findOne({ uid })
     .then(user => {
-      if(req.session.currentUser != uid){
-        return {
-          statusCode: 422,
-          status: false,
-          message: "failed to view event details"
-        }
-      }
-      if (user) {
+       if (user) {
         return {
           statusCode: 200,
           status: true,
           message: user["eventDetails"]
         }
        }
+        else {
+        return {
+          statusCode: 422,
+          status: false,
+          message: "failed to view event details"
+        }
+      }
+    })
+
+      // if(req.session.currentUser != uid){
+      //   return {
+      //     statusCode: 422,
+      //     status: false,
+      //     message: "failed to view event details"
+      //   }
+      // }
+    
       //  else {
       //   return {
       //     statusCode: 422,
@@ -217,7 +190,7 @@ const viewEvent = (req, uid) => {
       //     message: "failed to view event details"
       //   }
       // }
-    })
+
 }
 
 module.exports = {
